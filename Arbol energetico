@@ -1,0 +1,285 @@
+<title>Árbol Energético</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Spectral:ital,wght@0,400;0,600&display=swap">
+
+<style>
+  :root{
+    --paper:#EAEEEC;--surface:#F7F9F8;--surface-2:#E1E7E4;--surface-3:#D8E0DD;
+    --ink:#101819;--ink-2:#35474A;--muted:#67797A;
+    --rule:#C3CECB;--rule-soft:#D6DEDB;
+    --copper:#A9561F;--verdigris:#226C60;--oxide:#8E3A38;
+    --hot:#A9561F;--warm:#B9834E;--cold:#8C9C9A;
+    --wash:rgba(34,108,96,.08);--wash-cu:rgba(169,86,31,.11);
+    --f-d:"Archivo","Helvetica Neue",Arial,sans-serif;
+    --f-b:"Spectral",Georgia,serif;
+    --f-m:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    --gut:clamp(.9rem,3vw,2.4rem);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --paper:#0C1213;--surface:#131B1C;--surface-2:#1B2526;--surface-3:#223032;
+    --ink:#E4EAE8;--ink-2:#B3C2C1;--muted:#7E908F;--rule:#2A3839;--rule-soft:#1F2C2D;
+    --copper:#D9915B;--verdigris:#4EA694;--oxide:#C5706C;
+    --hot:#D9915B;--warm:#9C7048;--cold:#5E6E70;
+    --wash:rgba(78,166,148,.12);--wash-cu:rgba(217,145,91,.14);
+  }}
+  :root[data-theme="dark"]{
+    --paper:#0C1213;--surface:#131B1C;--surface-2:#1B2526;--surface-3:#223032;
+    --ink:#E4EAE8;--ink-2:#B3C2C1;--muted:#7E908F;--rule:#2A3839;--rule-soft:#1F2C2D;
+    --copper:#D9915B;--verdigris:#4EA694;--oxide:#C5706C;
+    --hot:#D9915B;--warm:#9C7048;--cold:#5E6E70;
+    --wash:rgba(78,166,148,.12);--wash-cu:rgba(217,145,91,.14);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--f-b);font-size:16px;line-height:1.55}
+  .wrap{max-width:1320px;margin:0 auto;padding-inline:var(--gut);padding-block:clamp(2rem,5vw,3.2rem) 4rem}
+  h1,h2,h3{font-family:var(--f-d);margin:0;line-height:1.14;text-wrap:balance}
+  .eyebrow{font-family:var(--f-m);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  header h1{font-size:clamp(2rem,5.5vw,3.05rem);font-weight:700;letter-spacing:-.028em;margin:.5rem 0 .7rem}
+  header h1 em{font-family:var(--f-b);font-style:italic;font-weight:400;color:var(--copper)}
+  .lede{color:var(--ink-2);max-width:66ch;font-size:1.02rem}
+
+  .leyenda{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1px;background:var(--rule-soft);
+    border-top:1.5px solid var(--ink);border-bottom:1px solid var(--rule);margin-top:1.3rem}
+  .leyenda div{background:var(--paper);padding:.65rem .9rem .75rem 0}
+  .leyenda dt{font-family:var(--f-m);font-size:.61rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:.22rem}
+  .leyenda dd{margin:0;font-size:.83rem;color:var(--ink-2)}
+  .leyenda dd b{font-family:var(--f-m);color:var(--ink);font-weight:600;font-size:.81rem}
+
+  .filtros{display:flex;flex-wrap:wrap;gap:.4rem;margin:2rem 0 .4rem;align-items:center}
+  .filtros .lbl{font-family:var(--f-m);font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-right:.3rem}
+  .tf{font-family:var(--f-m);font-size:.7rem;padding:.3rem .6rem;border:1px solid var(--rule);background:var(--surface);color:var(--ink-2);cursor:pointer}
+  .tf:hover{border-color:var(--copper);color:var(--copper)}
+  .tf[aria-pressed="true"]{background:var(--copper);border-color:var(--copper);color:var(--paper);font-weight:600}
+  .aviso{font-size:.84rem;color:var(--muted);margin:.45rem 0 0;font-style:italic;min-height:1.3em}
+
+  /* ---------- diagrama de flujo ---------- */
+  .flujo{margin-top:1.1rem;border:1px solid var(--rule-soft);background:var(--surface);overflow-x:auto}
+  .flujo svg{display:block;min-width:1000px;width:100%;height:auto}
+  .n-caja{cursor:pointer}
+  .n-caja rect{fill:var(--surface-2);stroke:var(--cold);stroke-width:1.5}
+  .n-caja.caliente rect{fill:var(--wash-cu);stroke:var(--hot);stroke-width:2.5}
+  .n-caja.tibio rect{stroke:var(--warm);stroke-width:2}
+  .n-caja:hover rect{stroke:var(--copper);stroke-width:3}
+  .n-id{font-family:var(--f-m);font-size:11px;font-weight:600;fill:var(--ink);text-anchor:middle}
+  .n-nm{font-family:var(--f-d);font-size:8.5px;fill:var(--ink-2);text-anchor:middle}
+  .n-caja.apagado{opacity:.15}
+  .arista{fill:none;stroke:var(--rule);stroke-width:1.3}
+  .arista.apagado{opacity:.12}
+  .banda{font-family:var(--f-d);font-size:10px;font-weight:700;fill:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+  .banda-l{stroke:var(--rule-soft);stroke-width:1;stroke-dasharray:3 4}
+
+  /* ---------- estratos ---------- */
+  .estrato{margin-top:2.4rem}
+  .estrato__h{border-bottom:2px solid var(--ink);padding-bottom:.45rem;margin-bottom:.5rem}
+  .estrato__t{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap}
+  .estrato__n{font-family:var(--f-d);font-size:1.08rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  .estrato__c{margin-left:auto;font-family:var(--f-m);font-size:.66rem;color:var(--muted)}
+  .estrato__e{font-size:.88rem;color:var(--ink-2);margin:.5rem 0 1rem;max-width:74ch}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(325px,1fr));gap:.7rem}
+  .nodo{background:var(--surface);border-left:3px solid var(--cold);padding:.75rem .85rem .8rem;display:flex;flex-direction:column;gap:.45rem;scroll-margin-top:1rem}
+  .nodo.caliente{border-left-color:var(--hot);background:var(--wash-cu)}
+  .nodo.tibio{border-left-color:var(--warm)}
+  .nodo.apagado{opacity:.22}
+  .nodo.destacado{outline:2px solid var(--copper);outline-offset:2px}
+  .nodo__h{display:flex;align-items:baseline;gap:.45rem;flex-wrap:wrap}
+  .nodo__id{font-family:var(--f-m);font-size:.66rem;font-weight:600;color:var(--muted)}
+  .nodo__n{font-family:var(--f-d);font-size:.94rem;font-weight:600;letter-spacing:-.012em;flex:1 1 auto}
+  .nodo__calor{font-family:var(--f-m);font-size:.74rem;font-weight:600;color:var(--hot);font-variant-numeric:tabular-nums}
+  .nodo.frio .nodo__calor{color:var(--muted)}
+  .expli{font-size:.845rem;color:var(--ink-2);margin:0;line-height:1.48}
+
+  .meta{display:flex;gap:.3rem;flex-wrap:wrap;align-items:center}
+  .cap{font-family:var(--f-m);font-size:.55rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:.14rem .36rem;border:1px solid currentColor}
+  .cap.alta{color:var(--verdigris);background:var(--wash)}
+  .cap.media_alta,.cap.media,.cap.variable{color:var(--copper);background:var(--wash-cu)}
+  .cap.baja,.cap.baja_media{color:var(--oxide)}
+  .gr{font-family:var(--f-m);font-size:.62rem;color:var(--muted)}
+  .tz{font-family:var(--f-m);font-size:.56rem;padding:.12rem .3rem;background:var(--surface-2);color:var(--muted)}
+  .tz.cri{background:var(--surface-3);color:var(--ink-2);font-weight:600}
+  .flu{font-family:var(--f-m);font-size:.6rem;color:var(--muted)}
+  .flu b{color:var(--copper);font-weight:600}
+
+  table.emp{width:100%;border-collapse:collapse;margin-top:.1rem}
+  table.emp td{padding:.26rem .2rem;border-top:1px solid var(--rule-soft);font-family:var(--f-m);font-size:.7rem;font-variant-numeric:tabular-nums;vertical-align:baseline}
+  table.emp td.nm{font-family:var(--f-d);font-size:.79rem;font-weight:600;width:42%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:0}
+  table.emp td.nm.pura{color:var(--verdigris)}
+  table.emp td.mu{text-align:right;color:var(--ink);white-space:nowrap}
+  table.emp td.me{text-align:right;color:var(--muted);white-space:nowrap}
+  table.emp td.sg{text-align:center;width:1.3rem;font-weight:600}
+  table.emp td.dm{text-align:right;width:3rem;white-space:nowrap}
+  .barata{color:var(--verdigris)}.cara{color:var(--oxide)}.enlinea{color:var(--muted)}
+  .sinDato{color:var(--muted);font-style:italic;font-size:.66rem}
+  .vacio{font-size:.76rem;color:var(--muted);font-style:italic}
+  details.nota summary{font-family:var(--f-m);font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);cursor:pointer;list-style:none;padding:.12rem 0}
+  details.nota summary::-webkit-details-marker{display:none}
+  details.nota summary:hover{color:var(--copper)}
+  details.nota p{margin:.3rem 0 0;font-size:.79rem;color:var(--ink-2);line-height:1.45}
+
+  .colofon{margin-top:3rem;border-top:1.5px solid var(--ink);padding-top:.9rem;font-family:var(--f-m);font-size:.68rem;color:var(--muted);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  .colofon p{margin:0;max-width:60ch;line-height:1.7}
+  :focus-visible{outline:2px solid var(--copper);outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Escasez en la cadena de electrificación y cómputo</p>
+    <h1>Árbol <em>Energético</em></h1>
+    <p class="lede">
+      38 nodos físicos, de las raíces a la copa, con las flechas del material real que va subiendo por la cadena.
+      El calor marca dónde la oferta está trabada <em>y</em> dónde se cobra esa traba — que no siempre es el mismo eslabón.
+    </p>
+    <dl class="leyenda">
+      <div><dt>Calor del nodo</dt><dd>Convergencia × captura. <b style="color:var(--hot)">■</b> caliente ≥21 · <b style="color:var(--warm)">■</b> tibio 14-20 · <b style="color:var(--cold)">■</b> frío</dd></div>
+      <div><dt>Referencia</dt><dd>EV/EBITDA de hoy y su <b>mediana de 5 años</b>. Dice si está cara para ella misma y deja el nivel anotado.</dd></div>
+      <div><dt>Señal</dt><dd><b class="barata">▼</b> bajo su mediana · <b class="enlinea">●</b> en línea · <b class="cara">▲</b> por encima</dd></div>
+      <div><dt>Δmg</dt><dd>Puntos de margen EBIT ganados en 5 años. <b>La prueba de que captura valor.</b></dd></div>
+    </dl>
+  </header>
+
+  <div class="filtros" id="filtros"><span class="lbl">Resaltar por tesis</span></div>
+  <p class="aviso" id="aviso"></p>
+
+  <div class="flujo"><svg id="svg" viewBox="0 0 1440 660" role="img"
+    aria-label="Diagrama de flujo de los 38 nodos, de las raíces abajo a la copa arriba"></svg></div>
+
+  <div id="arbol"></div>
+
+  <footer class="colofon">
+    <p id="pie">Mapa de trabajo · datos de Refinitiv</p>
+    <p>El múltiplo es referencia para comparar contra el futuro, no una recomendación. Un nodo caliente con una empresa cara sigue siendo valioso: significa que el mercado ya lo descontó, y queda anotado para cuando no lo esté.</p>
+  </footer>
+</div>
+
+<script>
+const FILAS=[["material"],["proceso"],["componente"],["sistema","servicio"],["no_fisico","capacidad"]];
+const NOMBRES=["Raíces","Raíz profunda","Tronco","Ramas","Copa"];
+let D=null, activa=null, POS={};
+
+const cls=c=>c>=21?'caliente':(c>=14?'tibio':'frio');
+function señal(v){
+  if(v==null) return ['<span class="enlinea">·</span>',''];
+  if(v<-8) return ['<span class="barata">▼</span>','barata contra su historia'];
+  if(v>15) return ['<span class="cara">▲</span>','cara contra su historia'];
+  return ['<span class="enlinea">●</span>','en línea'];
+}
+const corta=(s,n)=>s.length<=n?s:s.slice(0,n-1)+'…';
+
+/* ---------- diagrama ---------- */
+function dibujar(){
+  const W=1440,H=660,M=54,AL=38,AN=96,GAP=(H-2*M-AL)/4;
+  const svg=document.getElementById('svg');
+  let bandas='',aristas='',cajas='';
+  POS={};
+  FILAS.forEach((capas,i)=>{
+    const ns=D.nodos.filter(n=>capas.includes(n.capa)).sort((a,b)=>a.fam-b.fam||a.id.localeCompare(b.id));
+    const y=H-M-i*GAP-AL;
+    bandas+=`<text class="banda" x="8" y="${y+AL/2+3}">${NOMBRES[i]}</text>
+             <line class="banda-l" x1="8" y1="${y+AL+GAP/2-6}" x2="${W-8}" y2="${y+AL+GAP/2-6}"/>`;
+    const ancho=W-2*M-AN, paso=ns.length>1?ancho/(ns.length-1):0;
+    ns.forEach((n,j)=>{
+      const x=M+(ns.length>1?j*paso:ancho/2);
+      POS[n.id]={x:x+AN/2,y,yb:y+AL,c:n.calor};
+      cajas+=`<g class="n-caja ${cls(n.calor)}" data-id="${n.id}" data-tesis="${Object.keys(n.tesis||{}).join(',')}">
+        <rect x="${x}" y="${y}" width="${AN}" height="${AL}" rx="2"/>
+        <text class="n-id" x="${x+AN/2}" y="${y+15}">${n.id}</text>
+        <text class="n-nm" x="${x+AN/2}" y="${y+28}">${corta(n.nombre,20)}</text>
+        <title>${n.nombre} — calor ${n.calor}. Clic para ver el detalle.</title></g>`;
+    });
+  });
+  D.nodos.forEach(n=>{
+    (n.hacia||[]).forEach(d=>{
+      const a=POS[n.id],b=POS[d]; if(!a||!b) return;
+      const dy=Math.abs(a.y-b.yb), cy=Math.max(26,dy*0.5);
+      aristas+=`<path class="arista" data-de="${n.id}" data-a="${d}"
+        d="M ${a.x} ${a.y} C ${a.x} ${a.y-cy}, ${b.x} ${b.yb+cy}, ${b.x} ${b.yb}"
+        marker-end="url(#pf)"/>`;
+    });
+  });
+  svg.innerHTML=`<defs><marker id="pf" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5"
+      markerHeight="5" orient="auto-start-reverse">
+      <path d="M0,1 L7,4 L0,7 z" fill="var(--rule)"/></marker></defs>
+    ${bandas}${aristas}${cajas}`;
+  svg.querySelectorAll('.n-caja').forEach(g=>g.onclick=()=>{
+    const el=document.querySelector(`.nodo[data-id="${g.dataset.id}"]`);
+    if(!el) return;
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+    document.querySelectorAll('.destacado').forEach(x=>x.classList.remove('destacado'));
+    el.classList.add('destacado');
+  });
+}
+
+/* ---------- fichas ---------- */
+function nodoHTML(n){
+  const tz=Object.entries(n.tesis||{}).sort((a,b)=>b[1]-a[1])
+    .map(([k,v])=>`<span class="tz ${v===2?'cri':''}">${D.tesis[k].split(' ')[0]}</span>`).join('');
+  const hacia=(n.hacia||[]).length?`<p class="flu">alimenta a <b>${n.hacia.join(' · ')}</b></p>`:'';
+  const filas=(n.empresas||[]).map(e=>{
+    const [sg,ti]=señal(e.vsh);
+    const mu=e.mult==null?'<span class="sinDato">sin dato</span>':e.mult.toFixed(1)+'x';
+    const me=e.med==null?'':'med '+e.med.toFixed(1);
+    const dm=e.dmg==null?'':(e.dmg>0?'+':'')+e.dmg.toFixed(0);
+    const dmc=e.dmg==null?'':(e.dmg>0.5?'barata':(e.dmg<-0.5?'cara':'enlinea'));
+    return `<tr title="${e.ric} · ${e.pais}${ti?' · '+ti:''}${e.an?' · '+e.an+' analistas':''}">
+      <td class="nm ${e.pureza==='alta'?'pura':''}">${e.nombre}</td>
+      <td class="mu">${mu}</td><td class="me">${me}</td>
+      <td class="sg">${sg}</td><td class="dm ${dmc}">${dm}</td></tr>`;}).join('');
+  return `<article class="nodo ${cls(n.calor)}" data-id="${n.id}" data-tesis="${Object.keys(n.tesis||{}).join(',')}">
+    <div class="nodo__h"><span class="nodo__id">${n.id}</span><span class="nodo__n">${n.nombre}</span>
+      <span class="nodo__calor">${n.calor>0?n.calor:'—'}</span></div>
+    <p class="expli">${n.expli}</p>
+    <div class="meta"><span class="cap ${n.captura}">${String(n.captura).replace('_',' ')}</span>
+      ${n.g?`<span class="gr">crece ${n.g}%</span>`:''}${tz}</div>
+    ${hacia}
+    ${filas?`<table class="emp">${filas}</table>`:'<p class="vacio">sin empresa asignada, por decisión — ver el porqué</p>'}
+    <details class="nota"><summary>por qué esta captura</summary><p>${n.razon}</p></details>
+  </article>`;
+}
+
+function pintar(){
+  document.getElementById('arbol').innerHTML=FILAS.map((capas,i)=>{
+    const ns=D.nodos.filter(n=>capas.includes(n.capa)).sort((a,b)=>b.calor-a.calor);
+    if(!ns.length) return '';
+    const cal=ns.filter(n=>n.calor>=21).length;
+    const ex=(D.capas.find(c=>c.id===capas[0])||{}).expli||'';
+    return `<section class="estrato"><div class="estrato__h"><div class="estrato__t">
+        <span class="estrato__n">${NOMBRES[i]}</span>
+        <span class="estrato__c">${ns.length} nodos${cal?` · ${cal} caliente${cal>1?'s':''}`:''}</span>
+      </div></div><p class="estrato__e">${ex}</p>
+      <div class="grid">${ns.map(nodoHTML).join('')}</div></section>`;
+  }).reverse().join('');
+  filtrar();
+}
+
+function filtrar(){
+  const enc=id=>!activa||((D.nodos.find(n=>n.id===id)||{tesis:{}}).tesis||{})[activa]>0;
+  document.querySelectorAll('.nodo,.n-caja').forEach(el=>el.classList.toggle('apagado',!enc(el.dataset.id)));
+  document.querySelectorAll('.arista').forEach(p=>
+    p.classList.toggle('apagado',!(enc(p.dataset.de)&&enc(p.dataset.a))));
+  const av=document.getElementById('aviso');
+  av.textContent = activa
+    ? `${D.nodos.filter(n=>(n.tesis||{})[activa]>0).length} de ${D.nodos.length} nodos abastecen a «${D.tesis[activa]}». Los apagados no la tocan.`
+    : 'Tocá una tesis y se apaga todo lo que no la abastece. Los nodos que siguen encendidos tesis tras tesis son los de convergencia. Clic en una caja del diagrama para saltar a su ficha.';
+}
+
+fetch('datos.json').then(r=>r.json()).then(d=>{
+  D=d;
+  const f=document.getElementById('filtros');
+  Object.entries(d.tesis).forEach(([k,v])=>{
+    const b=document.createElement('button');
+    b.className='tf';b.textContent=v;b.setAttribute('aria-pressed','false');
+    b.onclick=()=>{activa=activa===k?null:k;
+      f.querySelectorAll('.tf').forEach(x=>x.setAttribute('aria-pressed','false'));
+      if(activa)b.setAttribute('aria-pressed','true');
+      filtrar();};
+    f.appendChild(b);
+  });
+  document.getElementById('pie').textContent=
+    `${d.nodos.length} nodos · ${d.nodos.reduce((a,n)=>a+n.empresas.length,0)} empresas · `+
+    `${d.nodos.filter(n=>n.calor>=21).length} nodos calientes · datos de Refinitiv`;
+  dibujar(); pintar();
+}).catch(e=>{document.getElementById('arbol').innerHTML=
+  '<p style="color:var(--oxide)">No se pudieron cargar los datos: '+e+'</p>';});
+</script>
