@@ -137,7 +137,20 @@
   .colofon p{margin:0;max-width:60ch;line-height:1.7}
   :focus-visible{outline:2px solid var(--copper);outline-offset:2px}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  /* ---------- nav maestro (3 secciones) ---------- */
+  .nav-maestro{display:flex;gap:.35rem;padding:.6rem var(--gut);border-bottom:1px solid var(--rule);
+    background:var(--surface);font-family:var(--f-m);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
+  .nav-maestro__link{padding:.32rem .75rem;color:var(--muted);text-decoration:none;border:1px solid transparent}
+  .nav-maestro__link:hover{color:var(--copper);border-color:var(--rule)}
+  .nav-maestro__link.activo{color:var(--ink);border-color:var(--rule);background:var(--surface-2);font-weight:600}
 </style>
+
+<nav class="nav-maestro" aria-label="Secciones del proyecto">
+  <a href="index.html" class="nav-maestro__link activo">Árbol</a>
+  <a href="valoraciones.html" class="nav-maestro__link">Valoraciones</a>
+  <a href="cartera.html" class="nav-maestro__link">Cartera</a>
+</nav>
 
 <div class="wrap">
   <header>
