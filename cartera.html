@@ -1,0 +1,217 @@
+<meta charset="utf-8">
+<title>Cartera — Árbol Energético</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Spectral:ital,wght@0,400;0,600&display=swap">
+
+<style>
+  :root{
+    --paper:#EAEEEC;--surface:#F7F9F8;--surface-2:#E1E7E4;--surface-3:#D8E0DD;
+    --ink:#101819;--ink-2:#35474A;--muted:#67797A;
+    --rule:#C3CECB;--rule-soft:#D6DEDB;
+    --copper:#A9561F;--verdigris:#226C60;--oxide:#8E3A38;
+    --wash:rgba(34,108,96,.08);--wash-cu:rgba(169,86,31,.11);
+    --f-d:"Archivo","Helvetica Neue",Arial,sans-serif;
+    --f-b:"Spectral",Georgia,serif;
+    --f-m:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    --gut:clamp(.9rem,3vw,2.4rem);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --paper:#0C1213;--surface:#131B1C;--surface-2:#1B2526;--surface-3:#223032;
+    --ink:#E4EAE8;--ink-2:#B3C2C1;--muted:#7E908F;--rule:#2A3839;--rule-soft:#1F2C2D;
+    --copper:#D9915B;--verdigris:#4EA694;--oxide:#C5706C;
+    --wash:rgba(78,166,148,.12);--wash-cu:rgba(217,145,91,.14);
+  }}
+  :root[data-theme="dark"]{
+    --paper:#0C1213;--surface:#131B1C;--surface-2:#1B2526;--surface-3:#223032;
+    --ink:#E4EAE8;--ink-2:#B3C2C1;--muted:#7E908F;--rule:#2A3839;--rule-soft:#1F2C2D;
+    --copper:#D9915B;--verdigris:#4EA694;--oxide:#C5706C;
+    --wash:rgba(78,166,148,.12);--wash-cu:rgba(217,145,91,.14);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--f-b);font-size:16px;line-height:1.55;margin:0}
+  .wrap{max-width:1320px;margin:0 auto;padding-inline:var(--gut);padding-block:clamp(1.4rem,4vw,2.4rem) 4rem}
+  h1,h2,h3{font-family:var(--f-d);margin:0;line-height:1.14;text-wrap:balance}
+  .eyebrow{font-family:var(--f-m);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  header h1{font-size:clamp(1.7rem,4.5vw,2.5rem);font-weight:700;letter-spacing:-.028em;margin:.4rem 0 .6rem}
+  header h1 em{font-family:var(--f-b);font-style:italic;font-weight:400;color:var(--copper)}
+  .lede{color:var(--ink-2);max-width:76ch;font-size:.98rem}
+
+  .nav-maestro{display:flex;gap:.35rem;padding:.6rem var(--gut);border-bottom:1px solid var(--rule);
+    background:var(--surface);font-family:var(--f-m);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
+  .nav-maestro__link{padding:.32rem .75rem;color:var(--muted);text-decoration:none;border:1px solid transparent}
+  .nav-maestro__link:hover{color:var(--copper);border-color:var(--rule)}
+  .nav-maestro__link.activo{color:var(--ink);border-color:var(--rule);background:var(--surface-2);font-weight:600}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:1.6rem}
+  @media (max-width:800px){.cols{grid-template-columns:1fr}}
+  .panel{background:var(--surface);border:1px solid var(--rule-soft);padding:1rem 1.1rem}
+  .panel h2{font-size:.92rem;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--rule);padding-bottom:.4rem;margin-bottom:.7rem}
+
+  #torta{display:block;margin:0 auto}
+  .leyenda-torta{display:flex;flex-direction:column;gap:.25rem;margin-top:.8rem;font-family:var(--f-m);font-size:.68rem;max-height:220px;overflow-y:auto}
+  .leyenda-torta div{display:flex;align-items:center;gap:.4rem}
+  .leyenda-torta i{width:.7rem;height:.7rem;display:inline-block;flex:0 0 auto}
+  .leyenda-torta b{font-variant-numeric:tabular-nums;margin-left:auto}
+
+  table.cartera{width:100%;border-collapse:collapse;margin-top:.9rem;font-size:.78rem}
+  table.cartera th{text-align:left;font-family:var(--f-m);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);border-bottom:2px solid var(--ink);padding:.3rem .4rem}
+  table.cartera td{padding:.28rem .4rem;border-top:1px solid var(--rule-soft);font-family:var(--f-m);font-variant-numeric:tabular-nums}
+  table.cartera td.nm{font-family:var(--f-d);font-size:.82rem;font-weight:600;font-variant-numeric:normal}
+  table.cartera td.num{text-align:right}
+  table.cartera tr.verificar{background:var(--wash-cu)}
+  .flag{font-family:var(--f-m);font-size:.55rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--copper);border:1px solid var(--copper);padding:.06rem .3rem;margin-left:.3rem}
+
+  .avisos{margin-top:1.4rem;background:var(--wash-cu);border:1px solid var(--copper);padding:.9rem 1rem}
+  .avisos h3{font-size:.82rem;margin-bottom:.5rem;color:var(--ink)}
+  .avisos ul{margin:0;padding-left:1.1rem;font-size:.8rem;color:var(--ink-2);line-height:1.5}
+
+  #nav-svg{display:block;width:100%;height:auto}
+  .nav-vacio{font-size:.82rem;color:var(--muted);font-style:italic}
+
+  .colofon{margin-top:3rem;border-top:1.5px solid var(--ink);padding-top:.9rem;font-family:var(--f-m);font-size:.68rem;color:var(--muted);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  .colofon p{margin:0;max-width:60ch;line-height:1.7}
+  :focus-visible{outline:2px solid var(--copper);outline-offset:2px}
+</style>
+
+<nav class="nav-maestro" aria-label="Secciones del proyecto">
+  <a href="index.html" class="nav-maestro__link">Árbol</a>
+  <a href="valoraciones.html" class="nav-maestro__link">Valoraciones</a>
+  <a href="cartera.html" class="nav-maestro__link activo">Cartera</a>
+</nav>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Snapshot manual · sin API de precios en vivo</p>
+    <h1>Cartera <em>actual</em></h1>
+    <p class="lede">
+      Peso por posición y por tramo, cargado a mano desde el broker (Koyfin/IBKR). Se actualiza pisando
+      <code>data/cartera_posiciones.csv</code> y agregando una fila a <code>data/nav_historico.csv</code> —
+      nada se lee en vivo.
+    </p>
+  </header>
+
+  <div class="cols">
+    <div class="panel">
+      <h2>Peso por posición</h2>
+      <svg id="torta" width="260" height="260" viewBox="0 0 260 260"></svg>
+      <div class="leyenda-torta" id="leyenda-torta"></div>
+    </div>
+    <div class="panel">
+      <h2>NAV (indexado a 100, manual/periódico)</h2>
+      <svg id="nav-svg" viewBox="0 0 600 220"></svg>
+      <p class="nav-vacio" id="nav-vacio"></p>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:1.4rem">
+    <h2>Posiciones — <span id="fecha-snap"></span></h2>
+    <table class="cartera">
+      <thead><tr><th>Ticker</th><th>Empresa</th><th>Nodo</th><th class="num">Peso</th><th class="num">Objetivo</th><th class="num">Precio</th><th class="num">Cantidad</th><th class="num">Costo prom.</th></tr></thead>
+      <tbody id="tbody-cartera"></tbody>
+    </table>
+  </div>
+
+  <div class="avisos" id="avisos" style="display:none">
+    <h3>A verificar</h3>
+    <ul id="lista-avisos"></ul>
+  </div>
+
+  <div class="colofon">
+    <p>Cartera cargada a mano · sin credenciales, sin API en vivo · datos del broker del usuario</p>
+    <p id="pie"></p>
+  </div>
+</div>
+
+<script>
+const DATOS = /*<<DATOS*/{"fecha_snapshot":"2026-09-24","posiciones":[{"ticker":"ASML","empresa":"ASML Holding N.V.","nodo":"S5","tramo":"1 Infaltable","peso_pct":8.09,"peso_obj":6.0,"precio":1503.2,"cantidad":5.0,"costo_prom":1387.8,"moneda":"EUR","verificar":""},{"ticker":"PRY","empresa":"Prysmian S.p.A.","nodo":"C9","tramo":"1 Infaltable","peso_pct":7.77,"peso_obj":6.0,"precio":122.35,"cantidad":59.0,"costo_prom":118.25,"moneda":"EUR","verificar":""},{"ticker":"CDNS","empresa":"Cadence Design Systems, Inc.","nodo":"K1","tramo":"1 Infaltable","peso_pct":6.7,"peso_obj":6.0,"precio":322.0,"cantidad":22.0,"costo_prom":279.06,"moneda":"USD","verificar":""},{"ticker":"2330","empresa":"Taiwan Semiconductor Manufacturing","nodo":"P5","tramo":"1 Infaltable","peso_pct":5.88,"peso_obj":6.0,"precio":2475.0,"cantidad":80.0,"costo_prom":2380.0,"moneda":"TWD","verificar":""},{"ticker":"ETN","empresa":"Eaton Corporation plc","nodo":"C8/S1","tramo":"2 Convicción alta","peso_pct":4.58,"peso_obj":4.3,"precio":440.0,"cantidad":11.0,"costo_prom":393.16,"moneda":"USD","verificar":""},{"ticker":"PWR","empresa":"Quanta Services, Inc.","nodo":"K2","tramo":"2 Convicción alta","peso_pct":4.26,"peso_obj":4.3,"precio":643.5,"cantidad":7.0,"costo_prom":622.02,"moneda":"USD","verificar":""},{"ticker":"VRT","empresa":"Vertiv Holdings Co","nodo":"S2","tramo":"2 Convicción alta","peso_pct":4.18,"peso_obj":4.3,"precio":245.3,"cantidad":18.0,"costo_prom":237.39,"moneda":"USD","verificar":""},{"ticker":"SMH","empresa":"VanEck Semiconductor ETF","nodo":"varios","tramo":"4 ETF","peso_pct":3.98,"peso_obj":4.0,"precio":600.52,"cantidad":7.0,"costo_prom":541.5,"moneda":"USD","verificar":""},{"ticker":"CEG","empresa":"Constellation Energy Corporation","nodo":"K3","tramo":"2 Convicción alta","peso_pct":3.96,"peso_obj":4.3,"precio":261.62,"cantidad":16.0,"costo_prom":264.57,"moneda":"USD","verificar":""},{"ticker":"A000660","empresa":"SK hynix Inc.","nodo":"C4","tramo":"2 Convicción alta","peso_pct":3.87,"peso_obj":4.3,"precio":1862000.0,"cantidad":3.0,"costo_prom":1697000.0,"moneda":"KRW","verificar":""},{"ticker":"CCJ","empresa":"Cameco Corporation","nodo":"M11/P2","tramo":"2 Convicción alta","peso_pct":3.84,"peso_obj":4.3,"precio":88.12,"cantidad":46.0,"costo_prom":93.26,"moneda":"USD","verificar":""},{"ticker":"MTRS","empresa":"Munters Group AB (publ)","nodo":"S2","tramo":"2 Convicción alta","peso_pct":3.76,"peso_obj":4.3,"precio":131.9,"cantidad":299.0,"costo_prom":140.35,"moneda":"SEK","verificar":""},{"ticker":"ASM","empresa":"ASM International NV","nodo":"S5","tramo":"3 Diversificador","peso_pct":3.59,"peso_obj":2.7,"precio":833.2,"cantidad":4.0,"costo_prom":759.2,"moneda":"EUR","verificar":""},{"ticker":"IFX","empresa":"Infineon Technologies AG","nodo":"C2/S1","tramo":"3 Diversificador","peso_pct":3.51,"peso_obj":2.7,"precio":56.26,"cantidad":58.0,"costo_prom":54.04,"moneda":"EUR","verificar":""},{"ticker":"MTSI","empresa":"MACOM Technology Solutions","nodo":"C3","tramo":"3 Diversificador","peso_pct":2.97,"peso_obj":2.7,"precio":284.94,"cantidad":11.0,"costo_prom":239.62,"moneda":"USD","verificar":""},{"ticker":"NLR","empresa":"VanEck Uranium ETF","nodo":"SIN_MAPEAR","tramo":"SIN_MAPEAR","peso_pct":2.92,"peso_obj":null,"precio":106.22,"cantidad":29.0,"costo_prom":109.47,"moneda":"USD","verificar":"VERIFICAR: NLR es el ETF de VanEck domiciliado en EE.UU. (NYSE Arca), NO el mismo fondo que NUCL.L (UCITS Irlanda) de cartera.csv -- confirmar cuál se tiene realmente, dado el perfil no-residente-EE.UU. del usuario"},{"ticker":"GFS","empresa":"GLOBALFOUNDRIES Inc.","nodo":"P5","tramo":"3 Diversificador","peso_pct":2.76,"peso_obj":2.7,"precio":47.05,"cantidad":62.0,"costo_prom":43.54,"moneda":"USD","verificar":""},{"ticker":"COHR","empresa":"Coherent Corp.","nodo":"C10","tramo":"3 Diversificador","peso_pct":2.75,"peso_obj":2.7,"precio":290.61,"cantidad":10.0,"costo_prom":266.5,"moneda":"USD","verificar":""},{"ticker":"FCX","empresa":"Freeport-McMoRan Inc.","nodo":"M3 mina","tramo":"3 Diversificador","peso_pct":2.66,"peso_obj":2.7,"precio":72.08,"cantidad":39.0,"costo_prom":69.34,"moneda":"USD","verificar":""},{"ticker":"NKT","empresa":"NKT A/S","nodo":"C9","tramo":"3 Diversificador","peso_pct":2.62,"peso_obj":2.7,"precio":909.5,"cantidad":20.0,"costo_prom":880.0,"moneda":"DKK","verificar":""},{"ticker":"HWM","empresa":"Howmet Aerospace Inc.","nodo":"P4/C7","tramo":"3 Diversificador","peso_pct":2.61,"peso_obj":2.7,"precio":229.38,"cantidad":12.0,"costo_prom":227.13,"moneda":"USD","verificar":""},{"ticker":"BKR","empresa":"Baker Hughes Company","nodo":"S3","tramo":"3 Diversificador","peso_pct":2.6,"peso_obj":2.7,"precio":57.29,"cantidad":48.0,"costo_prom":56.78,"moneda":"USD","verificar":""},{"ticker":"ATI","empresa":"ATI Inc.","nodo":"M8/M9/P3","tramo":"3 Diversificador","peso_pct":2.47,"peso_obj":2.7,"precio":186.21,"cantidad":14.0,"costo_prom":188.15,"moneda":"USD","verificar":""},{"ticker":"3750","empresa":"Contemporary Amperex Technology","nodo":"C5","tramo":"3 Diversificador","peso_pct":2.32,"peso_obj":2.7,"precio":492.8,"cantidad":39.0,"costo_prom":549.0,"moneda":"HKD","verificar":""},{"ticker":"DFEN","empresa":"VanEck Defense UCITS ETF","nodo":"defensa","tramo":"4 ETF","peso_pct":2.08,"peso_obj":2.2,"precio":52.09,"cantidad":37.0,"costo_prom":51.67,"moneda":"USD","verificar":"Confirmado: mismo fondo que DFNS.L, ticker primario/alterno del mismo ETF UCITS (IE000YYE6WK5)"},{"ticker":"A267250","empresa":"HD Hyundai Co., Ltd.","nodo":"SIN_MAPEAR","tramo":"SIN_MAPEAR","peso_pct":1.57,"peso_obj":null,"precio":205500.0,"cantidad":11.0,"costo_prom":246500.0,"moneda":"KRW","verificar":"VERIFICAR: 267250 es HD Hyundai Co. Ltd, la HOLDING -- DISTINTA de 267260.KS (HD Hyundai Electric), que es la que se clasificó y valuó en el tablero A3. Son dos empresas distintas del mismo grupo"},{"ticker":"QUTMF","empresa":"VanEck Quantum Computing UCITS ETF","nodo":"cuántica","tramo":"4 ETF","peso_pct":0.99,"peso_obj":1.0,"precio":29.86,"cantidad":35.0,"costo_prom":28.86,"moneda":"USD","verificar":"Confirmado: ticker OTC del mismo fondo UCITS que QNTM.L (IE0007Y8Y157)"},{"ticker":"NEO","empresa":"Neo Performance Materials Inc.","nodo":"SIN_MAPEAR","tramo":"SIN_MAPEAR","peso_pct":0.71,"peso_obj":null,"precio":32.36,"cantidad":33.0,"costo_prom":29.74,"moneda":"USD","verificar":"No estaba en cartera.csv (snapshot 14/09); ver fichas/tesis_tierras_raras.md #2 -- tesis de imanes ya descartada por la investigación, posición existente sin valuar"}],"por_tramo":{"1 Infaltable":28.439999999999998,"2 Convicción alta":28.450000000000003,"4 ETF":7.050000000000001,"3 Diversificador":30.860000000000003,"SIN_MAPEAR":5.2},"peso_total_pct":100.0,"nav_historico":[],"a_verificar":[{"ticker":"NLR","empresa":"VanEck Uranium ETF","nodo":"SIN_MAPEAR","tramo":"SIN_MAPEAR","peso_pct":2.92,"peso_obj":null,"precio":106.22,"cantidad":29.0,"costo_prom":109.47,"moneda":"USD","verificar":"VERIFICAR: NLR es el ETF de VanEck domiciliado en EE.UU. (NYSE Arca), NO el mismo fondo que NUCL.L (UCITS Irlanda) de cartera.csv -- confirmar cuál se tiene realmente, dado el perfil no-residente-EE.UU. del usuario"},{"ticker":"DFEN","empresa":"VanEck Defense UCITS ETF","nodo":"defensa","tramo":"4 ETF","peso_pct":2.08,"peso_obj":2.2,"precio":52.09,"cantidad":37.0,"costo_prom":51.67,"moneda":"USD","verificar":"Confirmado: mismo fondo que DFNS.L, ticker primario/alterno del mismo ETF UCITS (IE000YYE6WK5)"},{"ticker":"A267250","empresa":"HD Hyundai Co., Ltd.","nodo":"SIN_MAPEAR","tramo":"SIN_MAPEAR","peso_pct":1.57,"peso_obj":null,"precio":205500.0,"cantidad":11.0,"costo_prom":246500.0,"moneda":"KRW","verificar":"VERIFICAR: 267250 es HD Hyundai Co. Ltd, la HOLDING -- DISTINTA de 267260.KS (HD Hyundai Electric), que es la que se clasificó y valuó en el tablero A3. Son dos empresas distintas del mismo grupo"},{"ticker":"QUTMF","empresa":"VanEck Quantum Computing UCITS ETF","nodo":"cuántica","tramo":"4 ETF","peso_pct":0.99,"peso_obj":1.0,"precio":29.86,"cantidad":35.0,"costo_prom":28.86,"moneda":"USD","verificar":"Confirmado: ticker OTC del mismo fondo UCITS que QNTM.L (IE0007Y8Y157)"},{"ticker":"NEO","empresa":"Neo Performance Materials Inc.","nodo":"SIN_MAPEAR","tramo":"SIN_MAPEAR","peso_pct":0.71,"peso_obj":null,"precio":32.36,"cantidad":33.0,"costo_prom":29.74,"moneda":"USD","verificar":"No estaba en cartera.csv (snapshot 14/09); ver fichas/tesis_tierras_raras.md #2 -- tesis de imanes ya descartada por la investigación, posición existente sin valuar"}]}/*DATOS>>*/;
+
+const PALETA = ["#A9561F","#226C60","#8E3A38","#B9834E","#8C9C9A","#5E6E70","#4EA694","#D9915B",
+                "#C5706C","#7E908F","#9C7048","#556567","#F08A2E","#93A3A1"];
+
+function n(x,d=2){ return x==null ? '—' : x.toLocaleString('es-UY',{minimumFractionDigits:d,maximumFractionDigits:d}); }
+
+function torta(posiciones){
+  const svg = document.getElementById('torta');
+  const cx=130, cy=130, r=110;
+  let acc = -90; // empezar arriba
+  let path = '';
+  const leyenda = document.getElementById('leyenda-torta');
+  posiciones.forEach((p,i)=>{
+    const ang = p.peso_pct/100*360;
+    const a0 = acc*Math.PI/180, a1 = (acc+ang)*Math.PI/180;
+    const x0 = cx+r*Math.cos(a0), y0 = cy+r*Math.sin(a0);
+    const x1 = cx+r*Math.cos(a1), y1 = cy+r*Math.sin(a1);
+    const largo = ang>180 ? 1 : 0;
+    const color = PALETA[i%PALETA.length];
+    path += `<path d="M${cx},${cy} L${x0.toFixed(2)},${y0.toFixed(2)} A${r},${r} 0 ${largo} 1 ${x1.toFixed(2)},${y1.toFixed(2)} Z" fill="${color}" stroke="var(--paper)" stroke-width="1"><title>${p.empresa} — ${p.peso_pct.toFixed(2)}%</title></path>`;
+    acc += ang;
+    if(p.peso_pct >= 1.5){ // leyenda solo para posiciones >=1.5% para que no sature
+      const li = document.createElement('div');
+      li.innerHTML = `<i style="background:${color}"></i>${p.ticker}<b>${p.peso_pct.toFixed(1)}%</b>`;
+      leyenda.appendChild(li);
+    }
+  });
+  svg.innerHTML = path;
+}
+
+function tablaCartera(posiciones){
+  const tb = document.getElementById('tbody-cartera');
+  posiciones.forEach(p=>{
+    const tr = document.createElement('tr');
+    if(p.verificar) tr.className='verificar';
+    tr.innerHTML = `<td>${p.ticker}${p.verificar?'<span class="flag">verificar</span>':''}</td>
+      <td class="nm">${p.empresa}</td><td>${p.nodo}</td>
+      <td class="num">${p.peso_pct.toFixed(2)}%</td>
+      <td class="num">${p.peso_obj!=null?p.peso_obj.toFixed(1)+'%':'—'}</td>
+      <td class="num">${n(p.precio)}</td><td class="num">${n(p.cantidad,0)}</td><td class="num">${n(p.costo_prom)}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function navChart(serie){
+  const svg = document.getElementById('nav-svg');
+  const aviso = document.getElementById('nav-vacio');
+  if(!serie.length){
+    aviso.textContent = 'Sin puntos todavía — agregá filas a data/nav_historico.csv (fecha, nav_pct) en cada actualización periódica.';
+    return;
+  }
+  const W=600,H=220,pad=30;
+  const vals = serie.map(s=>s.nav_pct);
+  const min=Math.min(...vals,100), max=Math.max(...vals,100);
+  const rango = (max-min)||1;
+  const pts = serie.map((s,i)=>{
+    const x = pad + i*(W-2*pad)/Math.max(serie.length-1,1);
+    const y = H-pad - (s.nav_pct-min)/rango*(H-2*pad);
+    return [x,y];
+  });
+  const linea = pts.map((p,i)=>(i===0?'M':'L')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+  const base100y = H-pad - (100-min)/rango*(H-2*pad);
+  svg.innerHTML = `<line x1="${pad}" y1="${base100y.toFixed(1)}" x2="${W-pad}" y2="${base100y.toFixed(1)}" stroke="var(--rule)" stroke-dasharray="3 4"/>
+    <path d="${linea}" fill="none" stroke="var(--copper)" stroke-width="2"/>
+    ${pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.6" fill="var(--copper)"/>`).join('')}`;
+}
+
+function arrancar(d){
+  document.getElementById('fecha-snap').textContent = d.fecha_snapshot || '—';
+  torta(d.posiciones);
+  tablaCartera(d.posiciones);
+  navChart(d.nav_historico);
+  if(d.a_verificar.length){
+    document.getElementById('avisos').style.display='';
+    const ul = document.getElementById('lista-avisos');
+    d.a_verificar.forEach(p=>{
+      const li = document.createElement('li');
+      li.innerHTML = `<b>${p.ticker}</b> (${p.empresa}): ${p.verificar}`;
+      ul.appendChild(li);
+    });
+  }
+  document.getElementById('pie').textContent = `${d.posiciones.length} posiciones · peso total ${d.peso_total_pct}%`;
+}
+
+try{ arrancar(DATOS); }
+catch(e){ document.querySelector('.wrap').insertAdjacentHTML('beforeend',
+  '<p style="color:var(--oxide)"><b>Error al armar la página: '+e+'</b></p>'); }
+</script>
