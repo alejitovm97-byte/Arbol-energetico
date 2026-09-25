@@ -1,0 +1,29 @@
+ticker,ric,empresa,peso_pct,precio,cantidad,costo_prom,moneda,fecha_snapshot,verificar
+ASML,ASML.AS,ASML Holding N.V.,8.09,1503.2,5,1387.8,EUR,2026-09-24,
+PRY,PRY.MI,Prysmian S.p.A.,7.77,122.35,59,118.25,EUR,2026-09-24,
+CDNS,CDNS.OQ,"Cadence Design Systems, Inc.",6.7,322.0,22,279.06,USD,2026-09-24,
+2330,2330.TW,Taiwan Semiconductor Manufacturing,5.88,2475.0,80,2380.0,TWD,2026-09-24,
+ETN,ETN.N,Eaton Corporation plc,4.58,440.0,11,393.16,USD,2026-09-24,
+PWR,PWR.N,"Quanta Services, Inc.",4.26,643.5,7,622.02,USD,2026-09-24,
+VRT,VRT.N,Vertiv Holdings Co,4.18,245.3,18,237.39,USD,2026-09-24,
+SMH,SMH.OQ,VanEck Semiconductor ETF,3.98,600.52,7,541.5,USD,2026-09-24,
+CEG,CEG.OQ,Constellation Energy Corporation,3.96,261.62,16,264.57,USD,2026-09-24,
+A000660,000660.KS,SK hynix Inc.,3.87,1862000.0,3,1697000.0,KRW,2026-09-24,
+CCJ,CCJ.N,Cameco Corporation,3.84,88.12,46,93.26,USD,2026-09-24,
+MTRS,MTRS.ST,Munters Group AB (publ),3.76,131.9,299,140.35,SEK,2026-09-24,
+ASM,ASMI.AS,ASM International NV,3.59,833.2,4,759.2,EUR,2026-09-24,
+IFX,IFXGn.DE,Infineon Technologies AG,3.51,56.26,58,54.04,EUR,2026-09-24,
+MTSI,MTSI.OQ,MACOM Technology Solutions,2.97,284.94,11,239.62,USD,2026-09-24,
+NLR,,VanEck Uranium ETF,2.92,106.22,29,109.47,USD,2026-09-24,"VERIFICAR: NLR es el ETF de VanEck domiciliado en EE.UU. (NYSE Arca), NO el mismo fondo que NUCL.L (UCITS Irlanda) de cartera.csv -- confirmar cuál se tiene realmente, dado el perfil no-residente-EE.UU. del usuario"
+GFS,GFS.OQ,GLOBALFOUNDRIES Inc.,2.76,47.05,62,43.54,USD,2026-09-24,
+COHR,COHR.N,Coherent Corp.,2.75,290.61,10,266.5,USD,2026-09-24,
+FCX,FCX.N,Freeport-McMoRan Inc.,2.66,72.08,39,69.34,USD,2026-09-24,
+NKT,NKT.CO,NKT A/S,2.62,909.5,20,880.0,DKK,2026-09-24,
+HWM,HWM.N,Howmet Aerospace Inc.,2.61,229.38,12,227.13,USD,2026-09-24,
+BKR,BKR.OQ,Baker Hughes Company,2.6,57.29,48,56.78,USD,2026-09-24,
+ATI,ATI.N,ATI Inc.,2.47,186.21,14,188.15,USD,2026-09-24,
+3750,3750.HK,Contemporary Amperex Technology,2.32,492.8,39,549.0,HKD,2026-09-24,
+DFEN,DFNS.L,VanEck Defense UCITS ETF,2.08,52.09,37,51.67,USD,2026-09-24,"Confirmado: mismo fondo que DFNS.L, ticker primario/alterno del mismo ETF UCITS (IE000YYE6WK5)"
+A267250,,"HD Hyundai Co., Ltd.",1.57,205500.0,11,246500.0,KRW,2026-09-24,"VERIFICAR: 267250 es HD Hyundai Co. Ltd, la HOLDING -- DISTINTA de 267260.KS (HD Hyundai Electric), que es la que se clasificó y valuó en el tablero A3. Son dos empresas distintas del mismo grupo"
+QUTMF,QNTM.L,VanEck Quantum Computing UCITS ETF,0.99,29.86,35,28.86,USD,2026-09-24,Confirmado: ticker OTC del mismo fondo UCITS que QNTM.L (IE0007Y8Y157)
+NEO,NEO.TO,Neo Performance Materials Inc.,0.71,32.36,33,29.74,USD,2026-09-24,"No estaba en cartera.csv (snapshot 14/09); ver fichas/tesis_tierras_raras.md #2 -- tesis de imanes ya descartada por la investigación, posición existente sin valuar"
