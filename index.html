@@ -138,19 +138,22 @@
   :focus-visible{outline:2px solid var(--copper);outline-offset:2px}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-  /* ---------- nav maestro (3 secciones) ---------- */
-  .nav-maestro{display:flex;gap:.35rem;padding:.6rem var(--gut);border-bottom:1px solid var(--rule);
-    background:var(--surface);font-family:var(--f-m);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
-  .nav-maestro__link{padding:.32rem .75rem;color:var(--muted);text-decoration:none;border:1px solid transparent}
+  /* ---------- nav maestro (3 secciones), la arma nav.js ---------- */
+  .nav-maestro{display:flex;gap:.35rem;align-items:center;padding:.55rem var(--gut);
+    border-bottom:1px solid var(--rule);background:var(--surface);position:sticky;top:0;z-index:50;
+    font-family:var(--f-m);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+    backdrop-filter:saturate(1.4) blur(6px)}
+  .nav-maestro__link{padding:.34rem .78rem;color:var(--muted);text-decoration:none;border:1px solid transparent;
+    transition:color .15s,border-color .15s,background .15s}
   .nav-maestro__link:hover{color:var(--copper);border-color:var(--rule)}
   .nav-maestro__link.activo{color:var(--ink);border-color:var(--rule);background:var(--surface-2);font-weight:600}
+  .nav-maestro__tema{margin-left:auto;background:none;border:1px solid var(--rule);color:var(--muted);
+    cursor:pointer;font-family:var(--f-m);font-size:.72rem;padding:.3rem .55rem;line-height:1;
+    transition:color .15s,border-color .15s}
+  .nav-maestro__tema:hover{color:var(--copper);border-color:var(--copper)}
 </style>
 
-<nav class="nav-maestro" aria-label="Secciones del proyecto">
-  <a href="index.html" class="nav-maestro__link activo">Árbol</a>
-  <a href="valoraciones.html" class="nav-maestro__link">Valoraciones</a>
-  <a href="cartera.html" class="nav-maestro__link">Cartera</a>
-</nav>
+<script src="nav.js" data-seccion="arbol"></script>
 
 <div class="wrap">
   <header>
@@ -326,4 +329,3 @@ try{ arrancar(DATOS); }
 catch(e){ document.getElementById('aviso').innerHTML=
   '<b style="color:var(--oxide)">Error al dibujar: '+e+'</b>'; }
 </script>
-
